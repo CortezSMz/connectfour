@@ -19,7 +19,7 @@
           </v-btn>
         </template>
         <v-sheet class="footer-sheet" color="primary lighten-1">
-          <v-row>
+          <v-row align="center" justify="center">
             <v-col cols="12">
               <h3>Connect Four</h3>
               <p>
@@ -27,21 +27,24 @@
                 horizontal, vertical, or diagonal line of four discs.
               </p>
             </v-col>
-            <v-col>
-              <v-btn rounded light @click="resetGame">Reset game</v-btn>
+            <v-col cols="12">
+              <v-btn
+                class="footer-btn"
+                rounded
+                light
+                href="https://github.com/CortezSMz/connectfour"
+                target="blank"
+                >source code</v-btn
+              >
+              <v-btn class="footer-btn" rounded light @click="resetGame"
+                >Reset game</v-btn
+              >
             </v-col>
           </v-row>
           <v-row align="center" justify="center">
             <v-btn class="footer-btn" small light fab v-if="false">
               <font-awesome-icon
                 icon="save"
-                size="2x"
-                :style="{ color: 'var(--v-primary-lighten1)' }"
-              />
-            </v-btn>
-            <v-btn class="footer-btn" small light fab @click="close">
-              <font-awesome-icon
-                icon="xmark"
                 size="2x"
                 :style="{ color: 'var(--v-primary-lighten1)' }"
               />
