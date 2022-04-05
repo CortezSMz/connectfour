@@ -52,7 +52,7 @@ export default class Scene extends Vue {
 
   private ambientLight = new THREE.AmbientLight(0xdc8874, 0.5);
 
-  private renderer = new THREE.WebGLRenderer({ alpha: true });
+  private renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 
   private camera!: THREE.PerspectiveCamera;
 
