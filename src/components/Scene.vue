@@ -16,14 +16,18 @@ import Board from "./Board.vue";
     Board,
   },
   mounted() {
-    const el = this.$refs.scene as Element;
-    const aspect = el.clientWidth / el.clientHeight;
-
-    this.camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(
+      90,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.raycaster = new Raycaster(this.camera, this.renderer.domElement);
 
-    this.renderer.setSize(el.clientWidth, el.clientHeight);
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+    window.addEventListener("resize", this.onWindowResize, false);
 
     this.scene.add(
       this.ambientLight,
@@ -33,7 +37,7 @@ import Board from "./Board.vue";
 
     this.directionalLight.position.set(150, 350, 350);
 
-    el.appendChild(this.renderer.domElement);
+    (this.$refs.scene as Element).appendChild(this.renderer.domElement);
 
     this.controls.enablePan = false;
     this.camera.position.z = 0.25;
@@ -63,12 +67,19 @@ export default class Scene extends Vue {
     this.controls.update();
     requestAnimationFrame(this.animate);
   }
+
+  private onWindowResize() {
+    if (!this.camera || !this.renderer) return;
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+  }
 }
 </script>
 
 <style scoped>
 .scene {
-  width: 100vh;
+  width: 100vw;
   height: 100vh;
   display: block;
   position: fixed;
