@@ -1,40 +1,81 @@
 <template>
-  <div></div>
+  <div>
+    <Arrow
+      v-for="col of this.manager.board.grid[0].filter((c) => !c.filled)"
+      :key="col.x"
+      :col="col.x"
+    />
+    <Disc
+      v-for="disc in this.manager.board.discs.slice(0, 42)"
+      :key="disc.id"
+      :x="disc.x"
+      :z="disc.z"
+      :id="disc.id"
+      :color="disc.color"
+      :dropped="disc.dropped"
+    />
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import BoardManager from "@/engine/GameManager";
 import Scene from "./Scene.vue";
+import { gsap } from "gsap";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+import Arrow from "./Arrow.vue";
+import Disc from "./Disc.vue";
+
+gsap.registerPlugin(MotionPathPlugin);
 
 @Component<Board>({
+  components: {
+    Arrow,
+    Disc,
+  },
+
   mounted() {
     this.generateBoard();
   },
 
   destroyed() {
-    this.$parent.scene.remove(this.object3D.scene);
+    this.$parent.scene.remove(this.glbBoard.scene);
   },
 })
 export default class Board extends Vue {
-  private gltfLoader = new GLTFLoader();
+  gltfLoader = new GLTFLoader();
 
-  object3D!: GLTF;
+  manager = new BoardManager();
+
+  glbBoard!: GLTF;
+
+  disc!: GLTF;
 
   $parent!: Scene;
 
   private generateBoard() {
     this.$nextTick(() => {
-      this.gltfLoader.load("assets/board.glb", (gltf: GLTF) => {
-        this.object3D = gltf;
+      this.gltfLoader.load("assets/board.glb", (glbBoard: GLTF) => {
+        this.glbBoard = glbBoard;
 
-        gltf.scene.scale.set(20, 20, 20);
+        this.resetBoardPosition();
 
-        gltf.scene.rotateX(Math.PI / 2);
-
-        this.$parent.scene.add(gltf.scene);
+        this.$parent.scene.add(glbBoard.scene);
       });
     });
+  }
+
+  public dropDisc() {
+    gsap.to(this.disc.scene.position, {
+      ease: "bounce",
+      z: 0.0725,
+    });
+  }
+
+  public resetBoardPosition() {
+    this.glbBoard.scene.rotateX(Math.PI / 2);
+    this.glbBoard.scene.rotateY(0);
   }
 }
 </script>

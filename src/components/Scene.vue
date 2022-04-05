@@ -8,16 +8,20 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Component, Vue } from "vue-property-decorator";
+import Raycaster from "@/engine/Raycaster";
 import Board from "./Board.vue";
 
 @Component<Scene>({
-  components: { Board },
+  components: {
+    Board,
+  },
   mounted() {
     const el = this.$refs.scene as Element;
     const aspect = el.clientWidth / el.clientHeight;
 
     this.camera = new THREE.PerspectiveCamera(90, aspect, 0.1, 1000);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.raycaster = new Raycaster(this.camera, this.renderer.domElement);
 
     this.renderer.setSize(el.clientWidth, el.clientHeight);
 
@@ -32,7 +36,7 @@ import Board from "./Board.vue";
     el.appendChild(this.renderer.domElement);
 
     this.controls.enablePan = false;
-    this.camera.position.z = 5;
+    this.camera.position.z = 0.25;
 
     this.animate();
   },
@@ -50,6 +54,8 @@ export default class Scene extends Vue {
 
   private controls!: OrbitControls;
 
+  raycaster!: Raycaster;
+
   scene = new THREE.Scene();
 
   private animate() {
@@ -62,7 +68,7 @@ export default class Scene extends Vue {
 
 <style scoped>
 .scene {
-  width: 100%;
+  width: 100vh;
   height: 100vh;
   display: block;
   position: fixed;
