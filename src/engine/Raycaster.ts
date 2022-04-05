@@ -1,13 +1,16 @@
 import * as THREE from "three";
 
-function hashFunc(func: CallableFunction) {
-  return func
-    .toString()
-    .split("")
-    .reduce((a, b) => {
-      a = (a << 5) - a + b.charCodeAt(0);
-      return a & a;
-    }, 0);
+function hashFunc(object3D: THREE.Object3D, func: CallableFunction) {
+  return (
+    object3D.uuid +
+    func
+      .toString()
+      .split("")
+      .reduce((a, b) => {
+        a = (a << 5) - a + b.charCodeAt(0);
+        return a & a;
+      }, 0)
+  );
 }
 
 interface RaycasterListeners {
@@ -71,14 +74,19 @@ export default class Raycaster {
     const listener = (event: PointerEvent) =>
       this.raycast(event, object3D, handler);
     const listeners = this.listeners[eventName];
-    const hashedHandler = hashFunc(handler);
+    const hashedHandler = hashFunc(object3D, handler);
     if (!listeners) return;
     listeners[hashedHandler] = listener;
     this.element.addEventListener(eventName, listener);
   }
 
-  off(eventName: PointerEventNames, handler: () => void) {
-    const hashedHandler = hashFunc(handler);
+  off(
+    eventName: PointerEventNames,
+    object3D: THREE.Object3D | undefined,
+    handler: (event: PointerEvent) => void
+  ) {
+    if (!object3D) return;
+    const hashedHandler = hashFunc(object3D, handler);
     const listeners = this.listeners[eventName];
     if (listeners) {
       const listener = listeners[hashedHandler];

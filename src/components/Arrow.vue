@@ -22,7 +22,7 @@ import gsap from "gsap";
             this.$parent.$parent.raycaster.on(
               "pointermove",
               this.model.scene,
-              () => this.moveCurrentDisc()
+              this.moveCurrentDisc
             );
 
             this.$parent.$parent.raycaster.on(
@@ -41,7 +41,7 @@ import gsap from "gsap";
                 z: -0.105,
               });
 
-            this.$parent.glbBoard?.scene.add(this.model.scene);
+            this.$parent.model.scene.add(this.model.scene);
           }
         );
       });
@@ -49,7 +49,13 @@ import gsap from "gsap";
   },
 
   destroyed() {
-    this.$parent.glbBoard?.scene.remove(this.model.scene);
+    this.$parent.model.scene.remove(this.model.scene);
+
+    this.$parent.$parent.raycaster.off(
+      "pointermove",
+      this.model.scene,
+      this.moveCurrentDisc
+    );
   },
 })
 export default class Arrow extends Vue {
