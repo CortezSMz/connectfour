@@ -53,7 +53,6 @@ export class Board {
   }
 
   public isValidLocation(x: number) {
-    // eslint-disable-next-line for-direction
     for (let i = this.grid.length - 1; i >= 0; i--) {
       const col = this.grid[this.grid.length - 1].findIndex((c) => c.x === x);
 

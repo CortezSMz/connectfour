@@ -17,8 +17,8 @@ gsap.registerPlugin(MotionPathPlugin);
       this.$nextTick(() => {
         return this.$parent.gltfLoader.load(
           `assets/${this.color.toLowerCase()}-disc.glb`,
-          (glbDisc: GLTF) => {
-            this.model = glbDisc;
+          (model: GLTF) => {
+            this.model = model;
 
             const boardDisc = this.$parent.manager.board.getDiscById(this.id);
 
@@ -27,7 +27,7 @@ gsap.registerPlugin(MotionPathPlugin);
             this.model.scene.position.x = this.x;
             this.model.scene.position.z = this.z;
 
-            this.$parent.glbBoard.scene.add(this.model.scene);
+            this.$parent.model.scene.add(this.model.scene);
           }
         );
       });
@@ -35,7 +35,7 @@ gsap.registerPlugin(MotionPathPlugin);
   },
 
   destroyed() {
-    this.$parent.glbBoard.scene.remove(this.model.scene);
+    this.$parent.model.scene.remove(this.model.scene);
   },
 })
 export default class Disc extends Vue {

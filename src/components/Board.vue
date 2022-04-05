@@ -40,7 +40,7 @@ gsap.registerPlugin(MotionPathPlugin);
   },
 
   destroyed() {
-    this.$parent.scene.remove(this.glbBoard.scene);
+    this.$parent.scene.remove(this.model.scene);
   },
 })
 export default class Board extends Vue {
@@ -48,7 +48,7 @@ export default class Board extends Vue {
 
   manager = new BoardManager();
 
-  glbBoard!: GLTF;
+  model!: GLTF;
 
   disc!: GLTF;
 
@@ -56,12 +56,12 @@ export default class Board extends Vue {
 
   private generateBoard() {
     this.$nextTick(() => {
-      this.gltfLoader.load("assets/board.glb", (glbBoard: GLTF) => {
-        this.glbBoard = glbBoard;
+      this.gltfLoader.load("assets/board.glb", (model: GLTF) => {
+        this.model = model;
 
         this.resetBoardPosition();
 
-        this.$parent.scene.add(glbBoard.scene);
+        this.$parent.scene.add(model.scene);
       });
     });
   }
@@ -74,8 +74,8 @@ export default class Board extends Vue {
   }
 
   public resetBoardPosition() {
-    this.glbBoard.scene.rotateX(Math.PI / 2);
-    this.glbBoard.scene.rotateY(0);
+    this.model.scene.rotateX(Math.PI / 2);
+    this.model.scene.rotateY(0);
   }
 }
 </script>

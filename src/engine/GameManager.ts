@@ -17,14 +17,14 @@ export default class GameManager {
       currentDisc.z = isValid.z;
       currentDisc.dropped = true;
 
-      this.spawnNext(currentDisc.color, currentDisc.id);
+      this.spawnNext(currentDisc);
     }
   }
 
-  spawnNext(color: "RED" | "YELLOW", id: number) {
+  spawnNext(current: Disc) {
     this.board.discs.push({
-      id: id + 1,
-      color: color === "RED" ? "YELLOW" : "RED",
+      id: current.id + 1,
+      color: current.color === "RED" ? "YELLOW" : "RED",
       dropped: false,
       x: 0,
       z: -0.14,
