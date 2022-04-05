@@ -24,7 +24,8 @@ gsap.registerPlugin(MotionPathPlugin);
 
             if (boardDisc) boardDisc.model = this.model;
 
-            this.model.scene.position.z = -0.14;
+            this.model.scene.position.x = this.x;
+            this.model.scene.position.z = this.z;
 
             this.$parent.glbBoard.scene.add(this.model.scene);
           }
@@ -33,7 +34,7 @@ gsap.registerPlugin(MotionPathPlugin);
     });
   },
 
-  beforeDestroy() {
+  destroyed() {
     this.$parent.glbBoard.scene.remove(this.model.scene);
   },
 })

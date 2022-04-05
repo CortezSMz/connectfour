@@ -27,7 +27,7 @@ export default class GameManager {
       color: color === "RED" ? "YELLOW" : "RED",
       dropped: false,
       x: 0,
-      z: 0,
+      z: -0.14,
     });
   }
 

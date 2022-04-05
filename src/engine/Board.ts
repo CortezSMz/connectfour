@@ -28,7 +28,7 @@ export class Board {
       color: "RED",
       dropped: false,
       x: 0,
-      z: 0,
+      z: -0.14,
     });
   }
 
