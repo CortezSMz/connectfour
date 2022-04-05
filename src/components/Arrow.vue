@@ -10,42 +10,36 @@ import gsap from "gsap";
 
 @Component<Arrow>({
   mounted() {
-    this.$nextTick(() => {
-      this.$nextTick(() => {
-        return this.$parent.gltfLoader.load(
-          `assets/arrow.glb`,
-          (glbArrow: GLTF) => {
-            this.model = glbArrow;
+    return this.$parent.gltfLoader.load(
+      `assets/arrow.glb`,
+      (glbArrow: GLTF) => {
+        this.model = glbArrow;
 
-            this.model.scene.position.set(this.col, 0, -0.1);
+        this.model.scene.position.set(this.col, 0, -0.1);
 
-            this.$parent.$parent.raycaster.on(
-              "pointermove",
-              this.model.scene,
-              this.moveCurrentDisc
-            );
-
-            this.$parent.$parent.raycaster.on(
-              "pointerdown",
-              this.model.scene,
-              () => this.$parent.manager.drop(this.col)
-            );
-
-            gsap
-              .timeline({
-                repeat: -1,
-                yoyo: true,
-                defaults: { duration: 0.25 },
-              })
-              .to(this.model.scene.position, {
-                z: -0.105,
-              });
-
-            this.$parent.model.scene.add(this.model.scene);
-          }
+        this.$parent.$parent.raycaster.on(
+          "pointermove",
+          this.model.scene,
+          this.moveCurrentDisc
         );
-      });
-    });
+
+        this.$parent.$parent.raycaster.on("pointerdown", this.model.scene, () =>
+          this.$parent.manager.drop(this.col)
+        );
+
+        gsap
+          .timeline({
+            repeat: -1,
+            yoyo: true,
+            defaults: { duration: 0.25 },
+          })
+          .to(this.model.scene.position, {
+            z: -0.105,
+          });
+
+        this.addToBoard(this.model);
+      }
+    );
   },
 
   destroyed() {
@@ -65,6 +59,17 @@ export default class Arrow extends Vue {
   private model!: GLTF;
 
   $parent!: Board;
+
+  private addToBoard(model: GLTF) {
+    const boardModel = this.$parent.model;
+    if (boardModel) {
+      boardModel.scene.add(this.model.scene);
+    } else {
+      setTimeout(() => {
+        this.addToBoard(model);
+      }, 250);
+    }
+  }
 
   private moveCurrentDisc() {
     try {

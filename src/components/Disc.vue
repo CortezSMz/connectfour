@@ -13,25 +13,21 @@ gsap.registerPlugin(MotionPathPlugin);
 
 @Component<Disc>({
   mounted() {
-    this.$nextTick(() => {
-      this.$nextTick(() => {
-        return this.$parent.gltfLoader.load(
-          `assets/${this.color.toLowerCase()}-disc.glb`,
-          (model: GLTF) => {
-            this.model = model;
+    return this.$parent.gltfLoader.load(
+      `assets/${this.color.toLowerCase()}-disc.glb`,
+      (model: GLTF) => {
+        this.model = model;
 
-            const boardDisc = this.$parent.manager.board.getDiscById(this.id);
+        const boardDisc = this.$parent.manager.board.getDiscById(this.id);
 
-            if (boardDisc) boardDisc.model = this.model;
+        if (boardDisc) boardDisc.model = this.model;
 
-            this.model.scene.position.x = this.x;
-            this.model.scene.position.z = this.z;
+        this.model.scene.position.x = this.x;
+        this.model.scene.position.z = this.z;
 
-            this.$parent.model.scene.add(this.model.scene);
-          }
-        );
-      });
-    });
+        this.addToBoard(this.model);
+      }
+    );
   },
 
   destroyed() {
@@ -61,6 +57,17 @@ export default class Disc extends Vue {
   @Watch("dropped")
   isDropped() {
     this.drop();
+  }
+
+  private addToBoard(model: GLTF) {
+    const boardModel = this.$parent.model;
+    if (boardModel) {
+      boardModel.scene.add(this.model.scene);
+    } else {
+      setTimeout(() => {
+        this.addToBoard(model);
+      }, 250);
+    }
   }
 
   private drop() {
