@@ -34,4 +34,8 @@ export default class GameManager {
   getCurrentDisc(): Disc | undefined {
     return this.board.discs.find((disc: Disc) => !disc.dropped);
   }
+
+  resetGame() {
+    this.board = new Board();
+  }
 }

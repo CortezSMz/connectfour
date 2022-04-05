@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts">
+import "@/styles/scene.scss";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Component, Vue } from "vue-property-decorator";
@@ -34,6 +35,8 @@ import Board from "./Board.vue";
       this.hemisphereLight,
       this.directionalLight
     );
+
+    this.scene.background = new THREE.Color(0xf2f2f2);
 
     this.directionalLight.position.set(150, 350, 350);
 
@@ -76,14 +79,3 @@ export default class Scene extends Vue {
   }
 }
 </script>
-
-<style scoped>
-.scene {
-  width: 100vw;
-  height: 100vh;
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-</style>

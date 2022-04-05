@@ -14,6 +14,8 @@
       :color="disc.color"
       :dropped="disc.dropped"
     />
+
+    <Footer />
   </div>
 </template>
 
@@ -25,6 +27,7 @@ import Scene from "./Scene.vue";
 import { gsap } from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Arrow from "./Arrow.vue";
+import Footer from "./Footer.vue";
 import Disc from "./Disc.vue";
 
 gsap.registerPlugin(MotionPathPlugin);
@@ -33,6 +36,7 @@ gsap.registerPlugin(MotionPathPlugin);
   components: {
     Arrow,
     Disc,
+    Footer,
   },
 
   mounted() {
@@ -76,6 +80,10 @@ export default class Board extends Vue {
   public resetBoardPosition() {
     this.model.scene.rotateX(Math.PI / 2);
     this.model.scene.rotateY(0);
+  }
+
+  public resetGame() {
+    this.manager.resetGame();
   }
 }
 </script>
