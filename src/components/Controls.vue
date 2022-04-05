@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import Board from "./Board.vue";
-import "@/styles/footer.scss";
+import "@/styles/controls.scss";
 import Vue from "vue";
 import Component from "vue-class-component";
 
@@ -70,7 +70,7 @@ export default class Controls extends Vue {
   $parent!: Board;
 
   resetGame() {
-    this.$parent.manager.resetGame();
+    this.$parent.resetGame();
 
     this.close();
   }

@@ -23,13 +23,7 @@ export class Board {
   constructor() {
     this.grid = this.createGrid();
 
-    this.discs.push({
-      id: 0,
-      color: "RED",
-      dropped: false,
-      x: 0,
-      z: -0.14,
-    });
+    this.spawnNext({ color: "YELLOW", id: -1, dropped: false, x: 0, z: 0 });
   }
 
   private createGrid(): GridSlot[][] {
@@ -63,6 +57,16 @@ export class Board {
     }
 
     return null;
+  }
+
+  spawnNext(current: Disc) {
+    this.discs.push({
+      id: current.id + 1,
+      color: current.color === "RED" ? "YELLOW" : "RED",
+      dropped: false,
+      x: 0,
+      z: -0.14,
+    });
   }
 
   public getDiscById(id: number): Disc | undefined {

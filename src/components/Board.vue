@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="assets">
     <Arrow
       v-for="col of this.manager.board.grid[0].filter((c) => !c.filled)"
       :key="col.x"
@@ -15,7 +15,7 @@
       :dropped="disc.dropped"
     />
 
-    <Footer />
+    <Controls />
   </div>
 </template>
 
@@ -27,16 +27,23 @@ import Scene from "./Scene.vue";
 import { gsap } from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Arrow from "./Arrow.vue";
-import Footer from "./Footer.vue";
+import Controls from "./Controls.vue";
 import Disc from "./Disc.vue";
+import GameManager from "@/engine/GameManager";
 
 gsap.registerPlugin(MotionPathPlugin);
 
 @Component<Board>({
+  data() {
+    return {
+      assets: true,
+    };
+  },
+
   components: {
     Arrow,
     Disc,
-    Footer,
+    Controls,
   },
 
   mounted() {
@@ -51,6 +58,8 @@ export default class Board extends Vue {
   gltfLoader = new GLTFLoader();
 
   manager = new BoardManager();
+
+  assets!: boolean;
 
   model!: GLTF;
 
@@ -83,7 +92,13 @@ export default class Board extends Vue {
   }
 
   public resetGame() {
-    this.manager.resetGame();
+    this.manager = new GameManager();
+
+    this.$parent.raycaster.removeAll();
+
+    this.assets = false;
+
+    this.$nextTick(() => (this.assets = true));
   }
 }
 </script>

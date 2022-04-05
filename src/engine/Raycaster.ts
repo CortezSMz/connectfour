@@ -92,8 +92,22 @@ export default class Raycaster {
       const listener = listeners[hashedHandler];
       if (listener) {
         this.element.removeEventListener(eventName, listener);
+        delete listeners[hashedHandler];
         listeners[hashedHandler] = undefined;
       }
     }
+  }
+
+  removeAll() {
+    for (const [eventName, listeners] of Object.entries(this.listeners)) {
+      for (const [hash, listener] of Object.entries(
+        listeners as unknown as object
+      )) {
+        this.element.removeEventListener(eventName, listener);
+        this.listeners[hash] = undefined;
+        delete this.listeners[hash];
+      }
+    }
+    this.listeners;
   }
 }

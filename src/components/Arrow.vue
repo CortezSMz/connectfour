@@ -1,5 +1,5 @@
 <template>
-  <div v-if="false" />
+  <div :id="`${this.col}-arrow`" />
 </template>
 
 <script lang="ts">
