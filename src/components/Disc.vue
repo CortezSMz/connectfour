@@ -36,7 +36,7 @@ gsap.registerPlugin(MotionPathPlugin);
 })
 export default class Disc extends Vue {
   @Prop({ type: String, required: true })
-  private color!: string;
+  private color!: "RED" | "YELLOW";
 
   @Prop({ type: Number, required: true })
   private id!: number;
@@ -63,6 +63,13 @@ export default class Disc extends Vue {
     const boardModel = this.$parent.model;
     if (boardModel) {
       boardModel.scene.add(this.model.scene);
+      gsap
+        .timeline({ defaults: { ease: "elastic" } })
+        .from(this.model.scene.scale, {
+          x: 0,
+          y: 0,
+          z: 0,
+        });
     } else {
       setTimeout(() => {
         this.addToBoard(model);
@@ -71,19 +78,22 @@ export default class Disc extends Vue {
   }
 
   private drop() {
-    gsap
-      .timeline({ defaults: { duration: 0.5 } })
-      .to(this.model.scene.position, {
-        duration: 0,
-        ease: "elastic",
-        x: this.x,
-      })
-      .to(this.model.scene.position, {
+    gsap.fromTo(
+      this.model.scene.position,
+      { x: this.x },
+      {
         x: this.x,
         z: this.z,
         duration: 0.5,
         ease: "bounce",
-      });
+        onComplete: () => {
+          setTimeout(() => {
+            this.$parent.manager.board.spawnNext(this.id, this.color);
+            this.$parent.manager.dropping = false;
+          }, 250);
+        },
+      }
+    );
   }
 }
 </script>

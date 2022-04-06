@@ -23,7 +23,7 @@ export class Board {
   constructor() {
     this.grid = this.createGrid();
 
-    this.spawnNext({ color: "YELLOW", id: -1, dropped: false, x: 0, z: 0 });
+    this.spawnNext(-1, "YELLOW");
   }
 
   private createGrid(): GridSlot[][] {
@@ -59,10 +59,10 @@ export class Board {
     return null;
   }
 
-  spawnNext(current: Disc) {
+  spawnNext(id: number, color: "RED" | "YELLOW") {
     this.discs.push({
-      id: current.id + 1,
-      color: current.color === "RED" ? "YELLOW" : "RED",
+      id: id + 1,
+      color: color === "RED" ? "YELLOW" : "RED",
       dropped: false,
       x: 0,
       z: -0.14,
