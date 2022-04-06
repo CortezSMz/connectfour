@@ -72,7 +72,8 @@ export default class Board extends Vue {
       this.gltfLoader.load("assets/board.glb", (model: GLTF) => {
         this.model = model;
 
-        this.resetBoardPosition();
+        this.model.scene.rotateX(Math.PI / 2);
+        this.model.scene.rotateY(0);
 
         this.$parent.scene.add(model.scene);
       });
@@ -84,11 +85,6 @@ export default class Board extends Vue {
       ease: "bounce",
       z: 0.0725,
     });
-  }
-
-  public resetBoardPosition() {
-    this.model.scene.rotateX(Math.PI / 2);
-    this.model.scene.rotateY(0);
   }
 
   public resetGame() {

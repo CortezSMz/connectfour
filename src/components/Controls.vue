@@ -43,6 +43,9 @@
                 </p>
               </v-col>
               <v-col cols="12">
+                <v-btn class="footer-btn" rounded light @click="resetCamera"
+                  >Reset camera</v-btn
+                >
                 <v-btn class="footer-btn" rounded light @click="resetGame"
                   >Reset game</v-btn
                 >
@@ -79,6 +82,12 @@ import Component from "vue-class-component";
 })
 export default class Controls extends Vue {
   $parent!: Board;
+
+  resetCamera() {
+    this.$parent.$parent.resetCamera();
+
+    this.close();
+  }
 
   resetGame() {
     this.$parent.resetGame();

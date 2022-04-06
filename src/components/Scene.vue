@@ -43,7 +43,8 @@ import Board from "./Board.vue";
     (this.$refs.scene as Element).appendChild(this.renderer.domElement);
 
     this.controls.enablePan = false;
-    this.camera.position.z = 0.25;
+
+    this.resetCamera();
 
     this.animate();
   },
@@ -64,6 +65,10 @@ export default class Scene extends Vue {
   raycaster!: Raycaster;
 
   scene = new THREE.Scene();
+
+  public resetCamera() {
+    this.camera.position.set(0, 0, 0.25);
+  }
 
   private animate() {
     this.renderer.render(this.scene, this.camera);
