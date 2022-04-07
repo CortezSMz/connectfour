@@ -20,11 +20,18 @@ import gsap from "gsap";
         this.$parent.$parent.raycaster.on(
           "pointermove",
           this.model.scene,
-          this.moveCurrentDisc
+          () => {
+            if (this.currentColor === "RED") this.moveCurrentDisc();
+          }
         );
 
-        this.$parent.$parent.raycaster.on("pointerdown", this.model.scene, () =>
-          this.$parent.manager.drop(this.col)
+        this.$parent.$parent.raycaster.on(
+          "pointerdown",
+          this.model.scene,
+          () => {
+            if (this.currentColor === "RED")
+              this.$parent.manager.drop(this.col);
+          }
         );
 
         gsap
@@ -45,16 +52,17 @@ import gsap from "gsap";
   destroyed() {
     this.$parent.model.scene.remove(this.model.scene);
 
-    this.$parent.$parent.raycaster.off(
-      "pointermove",
-      this.model.scene,
-      this.moveCurrentDisc
-    );
+    this.$parent.$parent.raycaster.off("pointermove", this.model.scene, () => {
+      if (this.currentColor === "RED") this.moveCurrentDisc;
+    });
   },
 })
 export default class Arrow extends Vue {
   @Prop({ type: Number, required: true })
   private col!: number;
+
+  @Prop({ type: String, required: true })
+  private currentColor!: "RED" | "YELLOW" | "NONE";
 
   private model!: GLTF;
 

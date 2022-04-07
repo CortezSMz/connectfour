@@ -5,6 +5,7 @@
         v-for="col of this.manager.board.grid[0].filter((c) => !c.disc)"
         :key="col.x"
         :col="col.x"
+        :currentColor="currentColor"
       />
     </div>
 
@@ -55,6 +56,14 @@ gsap.registerPlugin(MotionPathPlugin);
 
   destroyed() {
     this.$parent.scene.remove(this.model.scene);
+  },
+
+  computed: {
+    currentColor() {
+      const currentDisc = this.manager.getCurrentDisc();
+      if (currentDisc) return currentDisc.color;
+      else return "NONE";
+    },
   },
 })
 export default class Board extends Vue {
