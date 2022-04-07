@@ -1,29 +1,19 @@
-# connectfour
 
-## Project setup
+# Connect Four
 
-```
-npm install
-```
+3D Connect Four game made with Three.js, TypeScript and Vue for UI. Play agains a minimax algorithm.
 
-### Compiles and hot-reloads for development
+## [Live demo](https://connectfour.alexandrecortez.dev/)
 
-```
-npm run serve
-```
+## To Do
+ - [ ] Minimax
+	 - [x] Implement minimax to play as yellow
+	 - [ ] Implement difficult settings (how many plays on the future does it see)
+	 - [ ] Optimize algorithm
+	 - [ ] Make it optional to play agains minimax - to control both discs and play locally
+ - [ ] Polish UI
+	 - [ ] Include more animations
+	 - [ ] Better ending screen
 
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### Lints and fixes files
-
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Inspiration
+This app is inspired by [Areknawo's 2048](https://github.com/areknawo/2048).
