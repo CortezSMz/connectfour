@@ -25,7 +25,7 @@ gsap.registerPlugin(MotionPathPlugin);
         this.model.scene.position.x = this.x;
         this.model.scene.position.z = this.z;
 
-        this.addToBoard(this.model);
+        this.$parent.spawnObject(this.model);
       }
     );
   },
@@ -55,30 +55,16 @@ export default class Disc extends Vue {
   $parent!: Board;
 
   @Watch("dropped")
-  isDropped() {
-    this.drop();
-  }
-
-  private addToBoard(model: GLTF) {
-    const boardModel = this.$parent.model;
-    if (boardModel) {
-      boardModel.scene.add(this.model.scene);
-      gsap
-        .timeline({ defaults: { ease: "elastic" } })
-        .from(this.model.scene.scale, {
-          x: 0,
-          y: 0,
-          z: 0,
-        });
+  async isDropped() {
+    if (this.model) {
+      this.drop();
     } else {
-      setTimeout(() => {
-        this.addToBoard(model);
-      }, 250);
+      this.isDropped();
     }
   }
 
-  private drop() {
-    gsap.fromTo(
+  private async drop() {
+    await gsap.fromTo(
       this.model.scene.position,
       { x: this.x },
       {
@@ -86,14 +72,10 @@ export default class Disc extends Vue {
         z: this.z,
         duration: 0.5,
         ease: "bounce",
-        onComplete: () => {
-          setTimeout(() => {
-            this.$parent.manager.board.spawnNext(this.id, this.color);
-            this.$parent.manager.dropping = false;
-          }, 250);
-        },
       }
     );
+
+    this.$parent.manager.spawnNext(this.id, this.color);
   }
 }
 </script>

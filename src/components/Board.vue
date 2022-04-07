@@ -1,10 +1,13 @@
 <template>
   <div v-if="assets">
-    <Arrow
-      v-for="col of this.manager.board.grid[0].filter((c) => !c.filled)"
-      :key="col.x"
-      :col="col.x"
-    />
+    <div v-if="!this.manager.state.finished">
+      <Arrow
+        v-for="col of this.manager.board.grid[0].filter((c) => !c.disc)"
+        :key="col.x"
+        :col="col.x"
+      />
+    </div>
+
     <Disc
       v-for="disc in this.manager.board.discs.slice(0, 42)"
       :key="disc.id"
@@ -80,11 +83,35 @@ export default class Board extends Vue {
     });
   }
 
-  public dropDisc() {
-    gsap.to(this.disc.scene.position, {
-      ease: "bounce",
-      z: 0.0725,
-    });
+  spawnObject(model: GLTF) {
+    if (this.model) {
+      this.model.scene.add(model.scene);
+      gsap.timeline({ defaults: { ease: "elastic" } }).from(model.scene.scale, {
+        x: 0,
+        y: 0,
+        z: 0,
+      });
+    } else {
+      setTimeout(() => {
+        this.spawnObject(model);
+      }, 250);
+    }
+  }
+
+  removeObject(model: GLTF) {
+    if (this.model) {
+      gsap.timeline({ defaults: { ease: "elastic" } }).to(model.scene.scale, {
+        x: 0,
+        y: 0,
+        z: 0,
+      });
+
+      this.model.scene.remove(model.scene);
+    } else {
+      setTimeout(() => {
+        this.removeObject(model);
+      }, 250);
+    }
   }
 
   public resetGame() {

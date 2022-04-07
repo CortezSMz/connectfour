@@ -9,10 +9,10 @@ export interface Disc {
   dropped: boolean;
 }
 
-interface GridSlot {
+export interface GridSlot {
   x: number;
   z: number;
-  filled: boolean;
+  disc?: Disc;
 }
 
 export class Board {
@@ -22,8 +22,6 @@ export class Board {
 
   constructor() {
     this.grid = this.createGrid();
-
-    this.spawnNext(-1, "YELLOW");
   }
 
   private createGrid(): GridSlot[][] {
@@ -39,34 +37,23 @@ export class Board {
         Board[i].push({
           x: j * discDiameter - offsetX,
           z: i * discDiameter - offsetY,
-          filled: false,
         });
       }
     }
     return Board;
   }
 
-  public isValidLocation(x: number) {
+  public isValidLocation(x: number, disc: Disc) {
     for (let i = this.grid.length - 1; i >= 0; i--) {
       const col = this.grid[this.grid.length - 1].findIndex((c) => c.x === x);
 
-      if (!this.grid[i][col].filled) {
-        this.grid[i][col].filled = true;
+      if (!this.grid[i][col].disc) {
+        this.grid[i][col].disc = disc;
         return this.grid[i][col];
       }
     }
 
     return null;
-  }
-
-  spawnNext(id: number, color: "RED" | "YELLOW") {
-    this.discs.push({
-      id: id + 1,
-      color: color === "RED" ? "YELLOW" : "RED",
-      dropped: false,
-      x: 0,
-      z: -0.14,
-    });
   }
 
   public getDiscById(id: number): Disc | undefined {

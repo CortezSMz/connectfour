@@ -37,7 +37,7 @@ import gsap from "gsap";
             z: -0.105,
           });
 
-        this.addToBoard(this.model);
+        this.$parent.spawnObject(this.model);
       }
     );
   },
@@ -59,17 +59,6 @@ export default class Arrow extends Vue {
   private model!: GLTF;
 
   $parent!: Board;
-
-  private addToBoard(model: GLTF) {
-    const boardModel = this.$parent.model;
-    if (boardModel) {
-      boardModel.scene.add(this.model.scene);
-    } else {
-      setTimeout(() => {
-        this.addToBoard(model);
-      }, 250);
-    }
-  }
 
   private moveCurrentDisc() {
     try {

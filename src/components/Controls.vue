@@ -22,8 +22,29 @@
       <v-col cols="8">
         <strong>Connect Four</strong>
       </v-col>
+
       <v-col cols="2">
-        <v-bottom-sheet v-model="controls">
+        <v-bottom-sheet
+          v-model="controls"
+          :persistent="finished"
+          eager
+          overlay-opacity="0.05"
+        >
+          <v-alert
+            v-model="finished"
+            class="text-center"
+            color="primary lighten-1"
+          >
+            {{
+              this.$parent.manager.state.finished
+                ? this.$parent.manager.state.winner === "TIE"
+                  ? "it's a tie!"
+                  : this.$parent.manager.state.winner === "RED"
+                  ? "🔴 won the game!"
+                  : "🟡 won the game!"
+                : ""
+            }}
+          </v-alert>
           <template v-slot:activator="{ on, attrs }">
             <v-btn light fab small v-bind="attrs" v-on="on">
               <font-awesome-icon
@@ -72,21 +93,29 @@ import Board from "./Board.vue";
 import "@/styles/controls.scss";
 import Vue from "vue";
 import Component from "vue-class-component";
+import { Watch } from "vue-property-decorator";
 
 @Component<Controls>({
-  data() {
-    return {
-      controls: false,
-    };
+  computed: {
+    finished() {
+      return this.$parent.manager.state.finished;
+    },
   },
 })
 export default class Controls extends Vue {
+  controls = false;
+
   $parent!: Board;
+
+  @Watch("finished")
+  setControls() {
+    this.controls = true;
+  }
 
   resetCamera() {
     this.$parent.$parent.resetCamera();
 
-    this.close();
+    if (!this.$parent.manager.state.finished) this.close();
   }
 
   resetGame() {
