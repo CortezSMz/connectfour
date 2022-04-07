@@ -12,7 +12,9 @@ export interface Disc {
 export interface GridSlot {
   x: number;
   z: number;
-  disc?: Disc;
+  row: number;
+  col: number;
+  disc: Disc | null;
 }
 
 export class Board {
@@ -31,29 +33,48 @@ export class Board {
     const offsetX = 0.0847;
     const offsetY = 0.0679;
 
-    for (let i = 0; i < 6; i++) {
-      Board[i] = [];
-      for (let j = 0; j < 7; j++) {
-        Board[i].push({
-          x: j * discDiameter - offsetX,
-          z: i * discDiameter - offsetY,
+    for (let row = 0; row < 6; row++) {
+      Board[row] = [];
+      for (let col = 0; col < 7; col++) {
+        Board[row].push({
+          x: col * discDiameter - offsetX,
+          z: row * discDiameter - offsetY,
+          row,
+          col,
+          disc: null,
         });
       }
     }
     return Board;
   }
 
-  public isValidLocation(x: number, disc: Disc) {
-    for (let i = this.grid.length - 1; i >= 0; i--) {
-      const col = this.grid[this.grid.length - 1].findIndex((c) => c.x === x);
+  public getColFromXCoord(x: number) {
+    return this.grid[this.grid.length - 1].findIndex((c) => c.x === x);
+  }
 
-      if (!this.grid[i][col].disc) {
-        this.grid[i][col].disc = disc;
-        return this.grid[i][col];
+  public isValidLocation(board: GridSlot[][], col: number) {
+    for (let i = board.length - 1; i >= 0; i--) {
+      if (!board[i][col].disc) {
+        return {
+          ...board[i][col],
+          col,
+          row: i,
+        };
       }
     }
 
     return null;
+  }
+
+  public allValidLocations(board: GridSlot[][]) {
+    const validMoves: GridSlot[] = [];
+
+    for (let i = 0; i < board[0].length; i++) {
+      const isValid = this.isValidLocation(board, i);
+      if (isValid) validMoves.push(isValid);
+    }
+
+    return validMoves;
   }
 
   public getDiscById(id: number): Disc | undefined {

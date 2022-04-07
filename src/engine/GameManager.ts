@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Board } from "@/engine/Board";
-import { Disc } from "./Board";
+import { Minimax } from "@/engine/Minimax";
+import { Board, Disc, GridSlot } from "@/engine/Board";
 
 export default class GameManager {
   public board: Board;
+
+  public minimax: Minimax;
 
   public dropping: boolean;
 
@@ -14,6 +16,8 @@ export default class GameManager {
 
   constructor() {
     this.board = new Board();
+
+    this.minimax = new Minimax(this);
 
     if (this.board.discs.length === 0) this.spawnNext(-1, "YELLOW");
 
@@ -31,12 +35,16 @@ export default class GameManager {
 
     if (!currentDisc) return;
 
-    const isValid = this.board.isValidLocation(x, currentDisc);
+    const isValid = this.board.isValidLocation(
+      this.board.grid,
+      this.board.getColFromXCoord(x)
+    );
 
     if (isValid) {
       this.dropping = true;
 
-      if (!currentDisc) return;
+      this.board.grid[isValid.row][isValid.col].disc = currentDisc;
+
       currentDisc.x = isValid.x;
       currentDisc.z = isValid.z;
       currentDisc.dropped = true;
@@ -44,7 +52,7 @@ export default class GameManager {
   }
 
   spawnNext(id: number, color: "RED" | "YELLOW") {
-    const isFinished = this.check(this.board);
+    const isFinished = this.check(this.board.grid);
 
     if (isFinished.result)
       return (this.state = {
@@ -60,23 +68,31 @@ export default class GameManager {
       z: -0.14,
     });
 
+    if (color === "RED") {
+      const best = this.minimax.getBestMove();
+
+      setTimeout(() => {
+        this.drop(best.move.x);
+      }, 500);
+    }
+
     setTimeout(() => {
       this.dropping = false;
     }, 250);
   }
 
-  check(board: Board): {
+  check(board: GridSlot[][]): {
     result: "RED" | "YELLOW" | "TIE" | null;
     discs: Disc[];
   } {
-    const rows = board.grid.length;
-    const cols = board.grid[0].length;
+    const rows = board.length;
+    const cols = board[0].length;
 
     let empty = 0;
 
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
-        const disc = board.grid[row][col].disc;
+        const disc = board[row][col].disc;
 
         if (!disc) continue;
 
@@ -85,18 +101,18 @@ export default class GameManager {
           col < cols - 3 &&
           this.fourConnected(
             disc,
-            board.grid[row][col + 1].disc,
-            board.grid[row][col + 2].disc,
-            board.grid[row][col + 3].disc
+            board[row][col + 1].disc,
+            board[row][col + 2].disc,
+            board[row][col + 3].disc
           )
         ) {
           return {
             result: disc.color,
             discs: [
               disc,
-              board.grid[row][col + 1].disc!,
-              board.grid[row][col + 2].disc!,
-              board.grid[row][col + 3].disc!,
+              board[row][col + 1].disc!,
+              board[row][col + 2].disc!,
+              board[row][col + 3].disc!,
             ],
           };
         }
@@ -106,18 +122,18 @@ export default class GameManager {
           row < rows - 3 &&
           this.fourConnected(
             disc,
-            board.grid[row + 1][col].disc,
-            board.grid[row + 2][col].disc,
-            board.grid[row + 3][col].disc
+            board[row + 1][col].disc,
+            board[row + 2][col].disc,
+            board[row + 3][col].disc
           )
         ) {
           return {
             result: disc.color,
             discs: [
               disc,
-              board.grid[row + 1][col].disc!,
-              board.grid[row + 2][col].disc!,
-              board.grid[row + 3][col].disc!,
+              board[row + 1][col].disc!,
+              board[row + 2][col].disc!,
+              board[row + 3][col].disc!,
             ],
           };
         }
@@ -128,18 +144,18 @@ export default class GameManager {
           col < cols - 3 &&
           this.fourConnected(
             disc,
-            board.grid[row + 1][col + 1].disc,
-            board.grid[row + 2][col + 2].disc,
-            board.grid[row + 3][col + 3].disc
+            board[row + 1][col + 1].disc,
+            board[row + 2][col + 2].disc,
+            board[row + 3][col + 3].disc
           )
         ) {
           return {
             result: disc.color,
             discs: [
               disc,
-              board.grid[row + 1][col + 1].disc!,
-              board.grid[row + 2][col + 2].disc!,
-              board.grid[row + 3][col + 3].disc!,
+              board[row + 1][col + 1].disc!,
+              board[row + 2][col + 2].disc!,
+              board[row + 3][col + 3].disc!,
             ],
           };
         }
@@ -150,18 +166,18 @@ export default class GameManager {
           col > 2 &&
           this.fourConnected(
             disc,
-            board.grid[row + 1][col - 1].disc,
-            board.grid[row + 2][col - 2].disc,
-            board.grid[row + 3][col - 3].disc
+            board[row + 1][col - 1].disc,
+            board[row + 2][col - 2].disc,
+            board[row + 3][col - 3].disc
           )
         ) {
           return {
             result: disc.color,
             discs: [
               disc,
-              board.grid[row + 1][col - 1].disc!,
-              board.grid[row + 2][col - 2].disc!,
-              board.grid[row + 3][col - 3].disc!,
+              board[row + 1][col - 1].disc!,
+              board[row + 2][col - 2].disc!,
+              board[row + 3][col - 3].disc!,
             ],
           };
         }
@@ -177,10 +193,10 @@ export default class GameManager {
   }
 
   fourConnected(
-    a: Disc | undefined,
-    b: Disc | undefined,
-    c: Disc | undefined,
-    d: Disc | undefined
+    a: Disc | null,
+    b: Disc | null,
+    c: Disc | null,
+    d: Disc | null
   ) {
     return (
       !!a &&
