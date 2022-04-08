@@ -3,6 +3,6 @@ module.exports = defineConfig({
   transpileDependencies: true,
   pwa: {
     name: "Connect Four - Alexandre Cortez",
-    themeColor: "#2361d7",
+    themeColor: "#4e79f4",
   },
 });

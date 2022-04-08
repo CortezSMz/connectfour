@@ -1,10 +1,10 @@
 <template>
-  <v-footer color="primary lighten-1" app>
+  <v-footer color="primary" app>
     <v-row justify="center" align="center" class="footer-row text-center">
       <v-col cols="2">
         <v-btn
           light
-          color="primary lighten-1"
+          color="primary"
           fab
           small
           href="https://github.com/CortezSMz/connectfour"
@@ -30,11 +30,7 @@
           eager
           overlay-opacity="0.05"
         >
-          <v-alert
-            v-model="finished"
-            class="text-center"
-            color="primary lighten-1"
-          >
+          <v-alert v-model="finished" class="text-center" color="primary">
             {{
               this.$parent.manager.state.finished
                 ? this.$parent.manager.state.winner === "TIE"
@@ -50,11 +46,11 @@
               <font-awesome-icon
                 icon="gear"
                 size="2x"
-                :style="{ color: 'var(--v-primary-lighten1)' }"
+                :style="{ color: 'var(--v-primary-base)' }"
               />
             </v-btn>
           </template>
-          <v-sheet class="footer-sheet" color="primary lighten-1">
+          <v-sheet class="footer-sheet" color="primary">
             <v-row align="center" justify="center">
               <v-col cols="12">
                 <h3>Connect Four</h3>
@@ -77,7 +73,7 @@
                 <font-awesome-icon
                   icon="save"
                   size="2x"
-                  :style="{ color: 'var(--v-primary-lighten1)' }"
+                  :style="{ color: 'var(--v-primary-base)' }"
                 />
               </v-btn>
             </v-row>
