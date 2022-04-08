@@ -75,6 +75,12 @@ export default class Disc extends Vue {
       }
     );
 
+    await gsap.fromTo(
+      this.model.scene.position,
+      { x: this.x + 0.000001, z: this.z + 0.000001 },
+      { x: this.x, z: this.z }
+    );
+
     this.$parent.manager.spawnNext(this.id, this.color);
   }
 }
