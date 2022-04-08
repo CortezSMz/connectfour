@@ -1,5 +1,5 @@
 <template>
-  <div v-if="false" />
+  <div :id="`${this.id}-${this.color.toLowerCase()}-disc`" />
 </template>
 
 <script lang="ts">
@@ -8,6 +8,7 @@ import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 import Board from "./Board.vue";
 import { gsap } from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+import { Object3D, Event } from "three";
 
 gsap.registerPlugin(MotionPathPlugin);
 
@@ -16,22 +17,26 @@ gsap.registerPlugin(MotionPathPlugin);
     return this.$parent.gltfLoader.load(
       `assets/${this.color.toLowerCase()}-disc.glb`,
       (model: GLTF) => {
-        this.model = model;
+        const object3D = model.scene.children[0];
+
+        object3D.removeFromParent();
+
+        this.model = object3D;
 
         const boardDisc = this.$parent.manager.board.getDiscById(this.id);
 
         if (boardDisc) boardDisc.model = this.model;
 
-        this.model.scene.position.x = this.x;
-        this.model.scene.position.z = this.z;
+        this.model.position.x = this.x;
+        this.model.position.z = this.z;
 
-        this.$parent.spawnObject(this.model);
+        this.$parent.$parent.spawnObject(this.model);
       }
     );
   },
 
   destroyed() {
-    this.$parent.model.scene.remove(this.model.scene);
+    this.$parent.$parent.scene.remove(this.model);
   },
 })
 export default class Disc extends Vue {
@@ -50,7 +55,7 @@ export default class Disc extends Vue {
   @Prop({ type: Boolean, required: true })
   private dropped!: boolean;
 
-  private model!: GLTF;
+  private model!: Object3D<Event>;
 
   $parent!: Board;
 
@@ -65,7 +70,7 @@ export default class Disc extends Vue {
 
   private async drop() {
     await gsap.fromTo(
-      this.model.scene.position,
+      this.model.position,
       { x: this.x },
       {
         x: this.x,
@@ -75,11 +80,7 @@ export default class Disc extends Vue {
       }
     );
 
-    await gsap.fromTo(
-      this.model.scene.position,
-      { x: this.x + 0.000001, z: this.z + 0.000001 },
-      { x: this.x, z: this.z }
-    );
+    this.model.position.set(this.x, 0, this.z);
 
     this.$parent.manager.spawnNext(this.id, this.color);
   }

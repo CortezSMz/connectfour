@@ -1,10 +1,10 @@
-import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
+import { Object3D, Event } from "three";
 
 export interface Disc {
   x: number;
   z: number;
   id: number;
-  model?: GLTF;
+  model?: Object3D<Event>;
   color: "RED" | "YELLOW";
   dropped: boolean;
 }

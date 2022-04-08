@@ -1,6 +1,6 @@
 <template>
   <div class="scene" ref="scene">
-    <Board :size="16" />
+    <Board />
   </div>
 </template>
 
@@ -11,6 +11,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Component, Vue } from "vue-property-decorator";
 import Raycaster from "@/engine/Raycaster";
 import Board from "./Board.vue";
+import { Object3D, Event } from "three";
+import { gsap } from "gsap";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+gsap.registerPlugin(MotionPathPlugin);
 
 @Component<Scene>({
   components: {
@@ -21,7 +25,7 @@ import Board from "./Board.vue";
       90,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000
+      2000
     );
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.raycaster = new Raycaster(this.camera, this.renderer.domElement);
@@ -62,11 +66,12 @@ export default class Scene extends Vue {
 
   private controls!: OrbitControls;
 
-  raycaster!: Raycaster;
+  public raycaster!: Raycaster;
 
-  scene = new THREE.Scene();
+  public scene = new THREE.Scene();
 
   public resetCamera() {
+    this.scene.rotation.set(Math.PI / 2, 0, 0);
     this.camera.position.set(0, 0, 0.25);
   }
 
@@ -81,6 +86,15 @@ export default class Scene extends Vue {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  public spawnObject(model: Object3D<Event>) {
+    this.scene.add(model);
+    gsap.timeline({ defaults: { ease: "elastic" } }).from(model.scale, {
+      x: 0,
+      y: 0,
+      z: 0,
+    });
   }
 }
 </script>
