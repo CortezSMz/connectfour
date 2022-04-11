@@ -1,6 +1,7 @@
 <template>
   <v-footer color="primary" app>
     <v-row justify="center" align="center" class="footer-row text-center">
+      <!-- Github link -->
       <v-col cols="2">
         <v-btn
           light
@@ -19,10 +20,12 @@
         </v-btn>
       </v-col>
 
+      <!-- Title -->
       <v-col cols="8">
         <strong>Connect Four</strong>
       </v-col>
 
+      <!-- Controls -->
       <v-col cols="2">
         <v-bottom-sheet
           v-model="controls"
@@ -30,6 +33,17 @@
           eager
           overlay-opacity="0.05"
         >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn light fab small v-bind="attrs" v-on="on">
+              <font-awesome-icon
+                icon="gear"
+                size="2x"
+                :style="{ color: 'var(--v-primary-base)' }"
+              />
+            </v-btn>
+          </template>
+
+          <!-- Finish alert -->
           <v-alert v-model="finished" class="text-center" color="primary">
             {{
               this.$parent.manager.state.finished
@@ -41,15 +55,8 @@
                 : ""
             }}
           </v-alert>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn light fab small v-bind="attrs" v-on="on">
-              <font-awesome-icon
-                icon="gear"
-                size="2x"
-                :style="{ color: 'var(--v-primary-base)' }"
-              />
-            </v-btn>
-          </template>
+
+          <!-- Sheet -->
           <v-sheet class="footer-sheet" color="primary">
             <v-row align="center" justify="center">
               <v-col cols="12">
@@ -59,7 +66,24 @@
                   horizontal, vertical, or diagonal line of four discs.
                 </p>
               </v-col>
-              <v-col cols="12">
+              <v-col cols="10" lg="6">
+                <v-slider
+                  :readonly="finished"
+                  v-model="$parent.manager.minimax.depth"
+                  color="secondary"
+                  label="Difficult"
+                  min="1"
+                  max="8"
+                  thumb-label="always"
+                  persistent-hint
+                  :hint="difficultHint"
+                >
+                  <template v-slot:thumb-label="{ value }">
+                    <span class="v-btn">{{ value }}</span>
+                  </template>
+                </v-slider>
+              </v-col>
+              <v-col cols="auto">
                 <v-btn class="footer-btn" rounded light @click="resetCamera"
                   >Reset camera</v-btn
                 >
@@ -67,15 +91,6 @@
                   >Reset game</v-btn
                 >
               </v-col>
-            </v-row>
-            <v-row align="center" justify="center">
-              <v-btn class="footer-btn" small light fab v-if="false">
-                <font-awesome-icon
-                  icon="save"
-                  size="2x"
-                  :style="{ color: 'var(--v-primary-base)' }"
-                />
-              </v-btn>
             </v-row>
           </v-sheet>
         </v-bottom-sheet>
@@ -95,6 +110,23 @@ import { Watch } from "vue-property-decorator";
   computed: {
     finished() {
       return this.$parent.manager.state.finished;
+    },
+    difficultHint() {
+      const difficult: Record<number, string> = {
+        1: "passive",
+        2: "passive",
+        3: "easy",
+        4: "easy",
+        5: "moderate",
+        6: "moderate",
+        7: "tougher",
+        8: "tougher",
+      };
+      return `AI will test ${
+        this.$parent.manager.minimax.depth
+      } plays in the future. (${
+        difficult[this.$parent.manager.minimax.depth]
+      })`;
     },
   },
 })
