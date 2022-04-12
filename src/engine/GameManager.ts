@@ -69,11 +69,13 @@ export default class GameManager {
     });
 
     if (color === "RED") {
-      const best = this.minimax.getBestMove();
+      const move = this.minimax.getBestMove();
+
+      this.dropping = false;
 
       setTimeout(() => {
-        this.drop(best.move.x);
-      }, 500);
+        this.drop(move[0] || (move as unknown as number));
+      }, 100);
     }
 
     setTimeout(() => {

@@ -75,6 +75,8 @@
                   min="1"
                   max="8"
                   thumb-label="always"
+                  ticks="always"
+                  tick-size="4"
                   persistent-hint
                   :hint="difficultHint"
                 >
@@ -122,9 +124,9 @@ import { Watch } from "vue-property-decorator";
         7: "tougher",
         8: "tougher",
       };
-      return `AI will test ${
-        this.$parent.manager.minimax.depth
-      } plays in the future. (${
+      return `AI ${
+        this.$parent.manager.state.finished ? "was testing" : "will test"
+      }  ${this.$parent.manager.minimax.depth} plays in the future. (${
         difficult[this.$parent.manager.minimax.depth]
       })`;
     },
