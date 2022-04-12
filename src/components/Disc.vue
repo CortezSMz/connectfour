@@ -64,6 +64,8 @@ export default class Disc extends Vue {
     if (this.model) {
       this.drop();
     } else {
+      await new Promise((s) => setTimeout(s, 100));
+
       this.isDropped();
     }
   }
