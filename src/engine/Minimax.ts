@@ -11,6 +11,7 @@ export class Minimax {
 
     this.depth = 5;
   }
+
   public getBestMove() {
     const [moves, bestScore] = this.getMoves();
 
@@ -26,7 +27,17 @@ export class Minimax {
     return randomBestMove;
   }
 
-  public getMoves(depth: number = this.depth) {
+  private colOrder() {
+    const arr = [...Array(this.manager.board.grid[0].length).keys()];
+
+    return arr.sort(
+      (a, b) =>
+        Math.abs(a - Math.floor(arr.length / 2)) -
+          Math.abs(b - Math.floor(arr.length / 2)) || b - a
+    );
+  }
+
+  private getMoves(depth: number = this.depth) {
     const board = [...this.manager.board.grid];
 
     const moves = this.minimax(board, depth, -Infinity, Infinity, true);
@@ -50,9 +61,12 @@ export class Minimax {
 
     if (playing) {
       const max: (number | number[][])[] = [[], alpha];
-      const validMoves = this.manager.board.allValidLocations(board);
+      const validMoves = this.manager.board.allValidLocations(
+        board,
+        this.colOrder()
+      );
 
-      for (const { row, col, x, z } of validMoves) {
+      for (const { row, col, x, z } of validMoves.sort()) {
         board[row][col].disc = {
           dropped: false,
           color: "YELLOW",
@@ -73,7 +87,10 @@ export class Minimax {
       return max;
     } else {
       const min: (number | number[][])[] = [[], beta];
-      const validMoves = this.manager.board.allValidLocations(board);
+      const validMoves = this.manager.board.allValidLocations(
+        board,
+        this.colOrder()
+      );
 
       for (const { row, col, x, z } of validMoves) {
         board[row][col].disc = {

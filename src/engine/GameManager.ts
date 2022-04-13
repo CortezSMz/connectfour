@@ -74,7 +74,7 @@ export default class GameManager {
       this.dropping = false;
 
       setTimeout(() => {
-        this.drop(move[0] || (move as unknown as number));
+        this.drop(move[0]);
       }, 100);
     }
 

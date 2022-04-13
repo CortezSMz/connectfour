@@ -66,11 +66,14 @@ export class Board {
     return null;
   }
 
-  public allValidLocations(board: GridSlot[][]) {
+  public allValidLocations(
+    board: GridSlot[][],
+    colOrder: number[] = [...Array(this.grid[0].length).keys()]
+  ) {
     const validMoves: GridSlot[] = [];
 
-    for (let i = 0; i < board[0].length; i++) {
-      const isValid = this.isValidLocation(board, i);
+    for (const col of colOrder) {
+      const isValid = this.isValidLocation(board, col);
       if (isValid) validMoves.push(isValid);
     }
 
