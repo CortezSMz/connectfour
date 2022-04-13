@@ -86,7 +86,7 @@
                 <v-col cols="12">
                   <h3>Connect Four</h3>
                   <p>
-                    teste The objective of the game is to be the first to form a
+                    The objective of the game is to be the first to form a
                     horizontal, vertical, or diagonal line of four discs.
                   </p>
                 </v-col>
