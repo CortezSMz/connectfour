@@ -11,7 +11,7 @@
 - [ ] Optimize minimax algorithm ([Pascal Pons - Solving Connect 4: How to build a perfect AI](http://blog.gamesolver.org/solving-connect-four/01-introduction/))
   - [ ] Test protocol and position notation (need some rewrite)
   - [x] Alpha-beta algorithm ([fc5f088](https://github.com/CortezSMz/connectfour/commit/fc5f088db5827a81e5c3b6c67b1b0f379e425d48))
-  - [ ] Move exploration order
+  - [x] Move exploration order ([b41266e](https://github.com/CortezSMz/connectfour/commit/b41266ed47b531b9c5569af2455d954a588f35d8))
   - [ ] Bitboard
   - [ ] Transposition Table
   - [ ] Iterative Deepening & Null Window
