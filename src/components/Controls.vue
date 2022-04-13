@@ -185,7 +185,7 @@ export default class Controls extends Vue {
 
   @Watch("finished")
   setControls() {
-    this.controls = false;
+    this.controls = true;
   }
 
   resetCamera() {
