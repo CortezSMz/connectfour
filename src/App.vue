@@ -15,5 +15,5 @@ import Scene from "./components/Scene.vue";
     Scene,
   },
 })
-export default class app extends Vue {}
+export default class App extends Vue {}
 </script>
