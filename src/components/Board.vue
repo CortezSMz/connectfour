@@ -26,7 +26,6 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import BoardManager from "@/engine/GameManager";
 import Scene from "./Scene.vue";
 import Arrow from "./Arrow.vue";
 import Controls from "./Controls.vue";
@@ -76,7 +75,7 @@ import { Object3D, Event } from "three";
 export default class Board extends Vue {
   gltfLoader = new GLTFLoader();
 
-  manager = new BoardManager();
+  manager = new GameManager();
 
   assets!: boolean;
 
