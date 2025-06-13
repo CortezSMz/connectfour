@@ -1,0 +1,10 @@
+html {
+  overflow: hidden !important;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.v-btn {
+  color: var(--v-primary-base) !important;
+  font-weight: 600 !important;
+}
