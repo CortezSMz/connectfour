@@ -2,7 +2,7 @@
 
 3D Connect Four game made with Three.js, TypeScript and Vue for UI. Play against a minimax algorithm.
 
-## [Live demo](https://connectfour.alexandrecortez.dev/)
+## [Live demo](https://cortezsmz.github.io/connectfour/)
 
 ## To Do
 
